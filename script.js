@@ -137,7 +137,7 @@ function carregarGlyph() {
     const opcoesEmbaralhadas = shuffle([...atual.opcoes]); // Copia e embaralha as opções
     botoes.forEach((btn, i) => {
         btn.textContent = opcoesEmbaralhadas[i];
-        btn.disabled = false;
+        btn.disabled = true;
         btn.classList.remove("correct", "incorrect"); // Limpa classes de feedback
     });
 
