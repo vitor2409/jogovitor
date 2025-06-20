@@ -11,7 +11,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Prevent scrollbar from animation */
+    overflow: hidden;
     position: relative;
 }
 
@@ -46,13 +46,14 @@ p {
     padding: 40px 30px;
     border-radius: 25px;
     max-width: 650px;
-    width: 90%; /* Mantém a largura responsiva */
+    width: 90%;
     margin: 20px auto;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 3px solid #ffda77;
     position: relative;
     overflow: hidden;
+    z-index: 1; /* Ensure container is above the blurred border effect */
 }
 
 .game-container::before {
@@ -75,13 +76,13 @@ p {
 }
 
 #glyph {
-    font-family: 'Segoe UI Historic', 'Noto Color Emoji', sans-serif; /* Fallback for hieroglyphs */
+    font-family: 'Segoe UI Historic', 'Noto Color Emoji', sans-serif;
     font-size: 120px;
     margin: 25px 0;
     animation: pulse 2s infinite ease-in-out;
-    color: #8B4513; /* Darker brown for glyphs */
+    color: #8B4513;
     text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
-    user-select: none; /* Prevent text selection on glyph */
+    user-select: none;
 }
 
 @keyframes pulse {
@@ -108,7 +109,7 @@ p {
     font-weight: bold;
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    outline: none; /* Remove default outline, will add focus style */
+    outline: none;
 }
 
 .options button:hover:not(:disabled) {
@@ -118,7 +119,7 @@ p {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
-.options button:focus-visible { /* For keyboard navigation */
+.options button:focus-visible {
     outline: 3px solid #007bff;
     outline-offset: 2px;
 }
@@ -198,7 +199,7 @@ p {
     resize: vertical;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
     font-family: 'Gabriela', sans-serif;
-    outline: none; /* Remove default outline, will add focus style */
+    outline: none;
 }
 
 #textoLivre:focus-visible {
@@ -225,7 +226,7 @@ p {
     justify-content: center;
     word-break: break-all;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
-    line-height: 1.2; /* Better spacing for multiple glyphs */
+    line-height: 1.2;
 }
 
 button {
@@ -240,7 +241,7 @@ button {
     font-weight: bold;
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    outline: none; /* Remove default outline, will add focus style */
+    outline: none;
 }
 
 button:hover {
@@ -315,7 +316,7 @@ button:focus-visible {
     }
 
     .options {
-        grid-template-columns: 1fr; /* Colunas empilhadas em telas menores */
+        grid-template-columns: 1fr;
     }
 
     .options button {
@@ -324,7 +325,7 @@ button:focus-visible {
     }
 
     #textoLivre {
-        width: calc(100% - 30px); /* Adjusted for padding */
+        width: calc(100% - 30px);
         font-size: 16px;
         padding: 12px;
     }
