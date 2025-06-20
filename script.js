@@ -23,6 +23,39 @@ const audioErro = document.getElementById("erro");
 const audioVitoria = document.getElementById("vitoria");
 const audioDerrota = document.getElementById("derrota");
 
+// Adição para música ambiente
+const backgroundMusic = document.getElementById("backgroundMusic");
+const toggleMusicButton = document.getElementById("toggleMusic");
+let isMusicPlaying = false; // Estado da música
+
+// Adiciona um volume inicial mais baixo para a música ambiente
+backgroundMusic.volume = 0.4;
+
+// Função para tocar/pausar a música
+function toggleMusic() {
+  if (isMusicPlaying) {
+    backgroundMusic.pause();
+    isMusicPlaying = false;
+    toggleMusicButton.textContent = "Música: OFF";
+  } else {
+    // Tenta tocar. Pode falhar se não houver interação do usuário ainda.
+    backgroundMusic.play().then(() => {
+      isMusicPlaying = true;
+      toggleMusicButton.textContent = "Música: ON";
+    }).catch(error => {
+      console.log("Erro ao tocar música:", error);
+      // Se a reprodução automática for bloqueada, a música só começará com iniciarJogo()
+      alert("Seu navegador bloqueou a reprodução automática. Clique em 'Iniciar Jogo' para tentar tocar a música ou tente novamente.");
+    });
+  }
+}
+
+// Adicionar listener ao botão de música
+if (toggleMusicButton) { // Garante que o botão exista antes de adicionar o listener
+    toggleMusicButton.addEventListener("click", toggleMusic);
+}
+
+
 function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
 }
@@ -31,11 +64,22 @@ function iniciarJogo() {
   document.getElementById("menu").classList.add("hidden");
   document.getElementById("jogo").classList.remove("hidden");
   reiniciar();
+  // Tentar tocar a música quando o jogo iniciar, se não estiver tocando
+  if (!isMusicPlaying) {
+    backgroundMusic.play().then(() => {
+      isMusicPlaying = true;
+      toggleMusicButton.textContent = "Música: ON";
+    }).catch(error => {
+      console.log("Música ambiente não pôde ser iniciada automaticamente. Erro:", error);
+      // Tratar caso em que o navegador bloqueia autoplay sem interação
+    });
+  }
 }
 
 function mostrarModoLivre() {
   document.getElementById("menu").classList.add("hidden");
   document.getElementById("livre").classList.remove("hidden");
+  // A música ambiente continua tocando no modo livre
 }
 
 function voltarAoMenu() {
@@ -44,6 +88,10 @@ function voltarAoMenu() {
   document.getElementById("livre").classList.add("hidden");
   document.getElementById("menu").classList.remove("hidden");
   clearInterval(timer); // Para o timer se estiver ativo
+  // A música ambiente continua tocando no menu. Se quiser parar, adicione:
+  // backgroundMusic.pause();
+  // isMusicPlaying = false;
+  // toggleMusicButton.textContent = "Música: OFF";
 }
 
 function carregarGlyph() {

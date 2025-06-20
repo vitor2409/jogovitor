@@ -12,7 +12,7 @@
     <p>Teste seus conhecimentos sobre os antigos símbolos egípcios!</p>
     <button onclick="iniciarJogo()">Iniciar Jogo</button>
     <button onclick="mostrarModoLivre()">Modo Livre</button>
-  </div>
+    <button id="toggleMusic">Música: OFF</button> </div>
 
   <div class="game-container hidden" id="jogo">
     <h1>Decifre o Hieróglifo</h1>
@@ -49,7 +49,6 @@
   <audio id="erro" src="erro.mp3" preload="auto"></audio>
   <audio id="vitoria" src="vitoria.mp3" preload="auto"></audio>
   <audio id="derrota" src="derrota.mp3" preload="auto"></audio>
-
-  <script src="script.js"></script>
+  <audio id="backgroundMusic" src="musica_ambiente.mp3" loop preload="auto"></audio> <script src="script.js"></script>
 </body>
 </html>

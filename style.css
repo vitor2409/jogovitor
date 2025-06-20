@@ -40,7 +40,7 @@ h1, h2 {
   padding: 40px 30px;
   border-radius: 25px;
   max-width: 650px;
-  width: 90%;
+  width: 90%; /* Mantém a largura responsiva */
   margin: 20px auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -244,6 +244,27 @@ button:hover {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Estilos para o botão da música */
+#toggleMusic {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: linear-gradient(135deg, #a9a9a9, #808080);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+#toggleMusic:hover {
+  background: linear-gradient(135deg, #808080, #696969);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .game-container {
@@ -260,7 +281,7 @@ button:hover {
   }
 
   .options {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Colunas empilhadas em telas menores */
   }
 
   .options button {
@@ -269,6 +290,7 @@ button:hover {
   }
 
   #textoLivre {
+    width: calc(100% - 20px); /* Ajuste para preenchimento */
     font-size: 16px;
     padding: 10px;
   }
@@ -286,6 +308,11 @@ button:hover {
   .score, #timer {
     font-size: 18px;
     padding: 6px 12px;
+  }
+
+  #toggleMusic { /* Ajuste para o botão de música em telas menores */
+    font-size: 14px;
+    padding: 8px 15px;
   }
 }
 
@@ -332,5 +359,10 @@ button:hover {
   button {
     padding: 10px 20px;
     font-size: 16px;
+  }
+
+  #toggleMusic { /* Ajuste para o botão de música em telas muito pequenas */
+    font-size: 12px;
+    padding: 6px 12px;
   }
 }
