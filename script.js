@@ -26,7 +26,7 @@ const audioDerrota = document.getElementById("derrota");
 // Adição para música ambiente
 const backgroundMusic = document.getElementById("backgroundMusic");
 const toggleMusicButton = document.getElementById("toggleMusic");
-let isMusicPlaying = false; // Estado da música
+let isMusicPlaying = false;
 
 // Adiciona um volume inicial mais baixo para a música ambiente
 backgroundMusic.volume = 0.4;
@@ -41,53 +41,52 @@ const gameThemes = [
     name: "Deserto",
     minScore: 0,
     bodyClass: "theme-desert",
-    musicSrc: "musica_ambiente_deserto.mp3" // Certifique-se que este arquivo exista
+    musicSrc: "musica_ambiente_deserto.mp3" // Confirme que este arquivo existe
   },
   {
     name: "Nilo",
     minScore: 5, // Após 5 acertos, muda para o Nilo
     bodyClass: "theme-nile",
-    musicSrc: "musica_ambiente_nilo.mp3" // Certifique-se que este arquivo exista
+    musicSrc: "musica_ambiente_nilo.mp3" // Confirme que este arquivo existe
   },
   {
     name: "Tumba",
     minScore: 10, // Após 10 acertos, muda para Tumba
     bodyClass: "theme-tomb",
-    musicSrc: "musica_ambiente_tumba.mp3" // Certifique-se que este arquivo exista
+    musicSrc: "musica_ambiente_tumba.mp3" // Confirme que este arquivo existe
   }
-  // Adicione mais temas conforme desejar
 ];
-let currentThemeIndex = -1; // Começa com -1 para garantir que o primeiro tema seja aplicado
+let currentThemeIndex = -1; // Inicializa com -1 para garantir que o primeiro tema seja aplicado corretamente
 
 // --- Definições para Personagem Guia ---
 const guideFeedback = {
   correct: {
     text: ["Magnífico! Sua sabedoria é digna dos faraós!", "Correto! Sua mente é afiada!", "Excelente trabalho!"],
-    image: "escriba_feliz.png" // Certifique-se que este arquivo exista
+    image: "escriba_feliz.png" // Confirme que este arquivo existe
   },
   incorrect: {
     text: ["Quase lá! Continue tentando, a verdade está escondida.", "Não desista! O caminho da aprendizagem é longo.", "Tente novamente, você consegue!"],
-    image: "escriba_triste.png" // Certifique-se que este arquivo exista
+    image: "escriba_triste.png" // Confirme que este arquivo existe
   },
   timeout: {
     text: ["O tempo esgotou! A pressa é inimiga da perfeição.", "Rápido como o vento, mas a sabedoria leva tempo."],
-    image: "escriba_surpreso.png" // Certifique-se que este arquivo exista
+    image: "escriba_surpreso.png" // Confirme que este arquivo existe
   },
-  welcome: {
-    text: ["Saudações, viajante! Decifre os mistérios do Egito antigo.", "Bem-vindo(a), jovem escriba!"],
-    image: "escriba_neutro.png" // Certifique-se que este arquivo exista
+  welcome: { // Mensagem inicial no menu
+    text: ["Saudações, viajante! Decifre os mistérios do Egito antigo.", "Bem-vindo(a) ao Jogo dos Hieróglifos!"],
+    image: "escriba_neutro.png" // Confirme que este arquivo existe
   },
-  goodbye: {
-    text: ["Até a próxima jornada!", "Que os deuses o(a) abençoem!"],
-    image: "escriba_neutro.png" // Pode usar a imagem neutra ou outra de despedida
-  },
-  start_game: { // Mensagem inicial ao começar o jogo
+  start_game: { // Mensagem ao iniciar o jogo
     text: ["Que a jornada da sabedoria comece!", "Desafie sua mente agora!"],
     image: "escriba_neutro.png"
   },
   free_mode: { // Mensagem ao entrar no modo livre
     text: ["Sinta-se à vontade para criar seus próprios hieróglifos!", "Liberdade para a escrita!"],
     image: "escriba_neutro.png"
+  },
+  goodbye: { // Mensagem ao sair ou fim de jogo
+      text: ["Até a próxima jornada!", "Que os deuses o(a) abençoem!"],
+      image: "escriba_neutro.png"
   }
 };
 
@@ -103,7 +102,8 @@ function toggleMusic() {
       toggleMusicButton.textContent = "Música: ON";
     }).catch(error => {
       console.log("Erro ao tocar música:", error);
-      alert("Seu navegador bloqueou a reprodução automática. Clique em 'Iniciar Jogo' para tentar tocar a música ou tente novamente.");
+      // Alguns navegadores bloqueiam autoplay sem interação do usuário.
+      // A música pode não iniciar aqui, mas iniciará ao clicar em "Iniciar Jogo".
     });
   }
 }
@@ -125,10 +125,11 @@ function showGuideFeedback(type) {
   guideCharacter.classList.remove("hidden");
   guideSpeechBubble.classList.remove("hidden");
 
+  // Esconde o balão e o personagem após 3 segundos
   setTimeout(() => {
     guideCharacter.classList.add("hidden");
     guideSpeechBubble.classList.add("hidden");
-  }, 3000); // Mostra por 3 segundos
+  }, 3000);
 }
 
 // Função para atualizar o tema do jogo
@@ -142,7 +143,7 @@ function updateGameTheme() {
     }
 
     if (newThemeIndex !== currentThemeIndex) {
-        // Remove a classe do tema anterior, se houver
+        // Remove a classe do tema anterior, se houver uma ativa
         if (currentThemeIndex !== -1) {
             document.body.classList.remove(gameThemes[currentThemeIndex].bodyClass);
         }
@@ -150,8 +151,9 @@ function updateGameTheme() {
         // Adiciona a classe do novo tema
         document.body.classList.add(gameThemes[currentThemeIndex].bodyClass);
 
-        // Mudar a música ambiente se houver uma nova
-        if (gameThemes[currentThemeIndex].musicSrc && backgroundMusic.src !== gameThemes[currentThemeIndex].musicSrc) {
+        // Mudar a música ambiente se houver uma nova para o tema
+        if (gameThemes[currentThemeIndex].musicSrc && backgroundMusic.src !== window.location.origin + '/' + gameThemes[currentThemeIndex].musicSrc) {
+            // Use window.location.origin para garantir o caminho absoluto correto
             backgroundMusic.src = gameThemes[currentThemeIndex].musicSrc;
             if (isMusicPlaying) {
                 backgroundMusic.play();
@@ -160,7 +162,6 @@ function updateGameTheme() {
     }
 }
 
-
 function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
 }
@@ -168,15 +169,15 @@ function shuffle(array) {
 function iniciarJogo() {
   document.getElementById("menu").classList.add("hidden");
   document.getElementById("jogo").classList.remove("hidden");
-  reiniciar();
-  showGuideFeedback('start_game'); // Mensagem do guia ao iniciar
-  // Tentar tocar a música quando o jogo iniciar, se não estiver tocando
+  reiniciar(); // Reinicia o jogo e aplica o tema inicial
+  showGuideFeedback('start_game'); // Mensagem do guia ao iniciar o jogo
+  // Tenta tocar a música se não estiver tocando
   if (!isMusicPlaying) {
     backgroundMusic.play().then(() => {
       isMusicPlaying = true;
       toggleMusicButton.textContent = "Música: ON";
     }).catch(error => {
-      console.log("Música ambiente não pôde ser iniciada automaticamente. Erro:", error);
+      console.log("Música ambiente não pôde ser iniciada automaticamente na função iniciarJogo. Erro:", error);
     });
   }
 }
@@ -193,11 +194,9 @@ function voltarAoMenu() {
   document.getElementById("livre").classList.add("hidden");
   document.getElementById("menu").classList.remove("hidden");
   clearInterval(timer); // Para o timer se estiver ativo
-  showGuideFeedback('goodbye'); // Mensagem do guia ao sair
-  // A música ambiente continua tocando no menu. Se quiser parar, adicione:
-  // backgroundMusic.pause();
-  // isMusicPlaying = false;
-  // toggleMusicButton.textContent = "Música: OFF";
+  showGuideFeedback('goodbye'); // Mensagem do guia ao voltar ao menu
+  // A música ambiente continua tocando no menu.
+  // Se quiser parar: backgroundMusic.pause(); isMusicPlaying = false; toggleMusicButton.textContent = "Música: OFF";
 }
 
 function carregarGlyph() {
@@ -210,11 +209,11 @@ function carregarGlyph() {
   document.getElementById("glyph").textContent = atual.simbolo;
 
   const botoes = document.querySelectorAll(".options button");
-  const opcoesEmbaralhadas = shuffle([...atual.opcoes]);
+  const opcoesEmbaralhadas = shuffle([...atual.opcoes]); // Copia e embaralha as opções
   botoes.forEach((btn, i) => {
     btn.textContent = opcoesEmbaralhadas[i];
     btn.disabled = false;
-    btn.classList.remove("correct", "incorrect");
+    btn.classList.remove("correct", "incorrect"); // Limpa classes de feedback
   });
 
   document.getElementById("feedback").textContent = "";
@@ -225,7 +224,7 @@ function contarTempo() {
   document.getElementById("time").textContent = tempo;
   if (tempo <= 0) {
     clearInterval(timer);
-    mostrarFeedback(false, true);
+    mostrarFeedback(false, true); // Passa true para indicar que o tempo acabou
   }
 }
 
@@ -252,19 +251,20 @@ function mostrarFeedback(correto, tempoEsgotado = false, botaoClicado = null) {
     if (botaoClicado) {
       botaoClicado.classList.add("correct");
     }
-    showGuideFeedback('correct'); // Guia: Acertou
+    showGuideFeedback('correct'); // Acertou, mostra feedback do guia
   } else {
     audioErro.play();
     if (tempoEsgotado) {
       feedback.textContent = "⏰ Tempo esgotado! Era: " + atual.resposta;
-      showGuideFeedback('timeout'); // Guia: Tempo esgotado
+      showGuideFeedback('timeout'); // Tempo esgotado, mostra feedback do guia
     } else {
       feedback.textContent = "❌ Errado! Era: " + atual.resposta;
       if (botaoClicado) {
         botaoClicado.classList.add("incorrect");
       }
-      showGuideFeedback('incorrect'); // Guia: Errou
+      showGuideFeedback('incorrect'); // Errou, mostra feedback do guia
     }
+    // Destacar a resposta correta se houver uma opção correspondente
     botoes.forEach(btn => {
       if (btn.textContent === atual.resposta) {
         btn.classList.add("correct");
@@ -273,7 +273,7 @@ function mostrarFeedback(correto, tempoEsgotado = false, botaoClicado = null) {
   }
 
   document.getElementById("score").textContent = score;
-  updateGameTheme(); // Verifica e atualiza o tema após a pontuação mudar
+  updateGameTheme(); // **Importante:** Atualiza o tema após mudar a pontuação
 
   setTimeout(() => {
     indiceAtual++;
@@ -295,7 +295,8 @@ function fimDeJogo() {
   } else {
     audioDerrota.play();
   }
-  showGuideFeedback('goodbye'); // Guia: Fim de jogo
+  // No fim do jogo, o guia já deu o feedback de 'goodbye' ao voltar ao menu.
+  // Ou, você pode adicionar um feedback específico de "Fim de Jogo" aqui.
 }
 
 function reiniciar() {
@@ -306,7 +307,7 @@ function reiniciar() {
   document.getElementById("fim").classList.add("hidden");
   document.getElementById("jogo").classList.remove("hidden");
   carregarGlyph();
-  updateGameTheme(); // Redefine o tema para o inicial ao reiniciar
+  updateGameTheme(); // **Importante:** Reseta o tema para o inicial ao reiniciar o jogo
 }
 
 // Modo livre
@@ -323,7 +324,8 @@ document.getElementById("textoLivre").addEventListener("input", () => {
   document.getElementById("saidaHieroglifo").textContent = convertido || "𓀀";
 });
 
-// Inicialização: Aplica o tema inicial quando a página carrega
+// **Importante:** Garante que o tema inicial e a mensagem de boas-vindas do guia apareçam ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     updateGameTheme();
+    showGuideFeedback('welcome'); // Mensagem de boas-vindas do guia no menu
 });

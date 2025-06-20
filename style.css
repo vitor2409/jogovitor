@@ -11,41 +11,47 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow: hidden; /* Evita barras de rolagem estranhas */
   position: relative;
-  transition: background 1s ease-in-out, background-image 1s ease-in-out; /* Transição suave para o fundo */
+  /* Transição suave para o fundo ao mudar de tema */
+  transition: background 1s ease-in-out, background-image 1s ease-in-out, color 1s ease-in-out;
 }
 
 /* Base da progressão temática: Tema Deserto */
 body.theme-desert {
     background: linear-gradient(135deg, #fceabb, #f8b500);
-    background-image: url('pyramid-background.png'); /* Sua imagem atual de pirâmide */
+    /* Imagem de fundo padrão, ajuste o nome do arquivo se for diferente */
+    background-image: url('pyramid-background.png');
     background-size: cover;
     background-position: center;
+    color: #333; /* Cor do texto para este tema */
 }
 
 /* Tema Margens do Nilo */
 body.theme-nile {
     background: linear-gradient(135deg, #a7d9e2, #68b0ab); /* Cores mais de rio/água */
-    background-image: url('nile-background.png'); /* Imagem de fundo do Nilo (crie esta imagem) */
+    /* Crie esta imagem e coloque na pasta do projeto */
+    background-image: url('nile-background.png');
     background-size: cover;
     background-position: center;
-    color: #2a5856; /* Texto para combinar com o tema */
+    color: #2a5856; /* Cor do texto para combinar com o tema Nilo */
 }
 
 /* Tema Interior da Tumba */
 body.theme-tomb {
     background: linear-gradient(135deg, #4b3d3d, #2c2525); /* Cores mais escuras de tumba */
-    background-image: url('tomb-wall.png'); /* Textura de parede de tumba com hieróglifos (crie esta imagem) */
+    /* Crie esta imagem e coloque na pasta do projeto */
+    background-image: url('tomb-wall.png');
     background-size: cover;
     background-position: center;
-    color: #eee; /* Mudar cor do texto para claro */
+    color: #eee; /* Cor do texto para claro neste tema escuro */
 }
 
 
 h1, h2 {
   font-family: 'Cinzel Decorative', serif;
-  color: inherit; /* Permite que a cor do texto seja herdada do body ou .game-container */
+  /* Garante que a cor do cabeçalho mude com o tema do body */
+  color: inherit;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -61,7 +67,7 @@ h1, h2 {
   border: 3px solid #ffda77;
   position: relative;
   overflow: hidden;
-  /* Adicione transição para o background do container se ele mudar com o tema */
+  /* Transição para o background do container se ele mudar com o tema */
   transition: background 1s ease-in-out, border 1s ease-in-out, box-shadow 1s ease-in-out, transform 0.3s ease;
 }
 
@@ -289,8 +295,7 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    /* Adicione uma margem inferior para dar espaço ao balão de fala */
-    margin-bottom: 30px;
+    margin-bottom: 30px; /* Espaço para o balão de fala */
 }
 
 #guideCharacter {
@@ -298,8 +303,8 @@ button:hover {
     height: 100%;
     object-fit: contain; /* Garante que a imagem se ajuste sem cortar */
     transition: opacity 0.5s ease;
-    pointer-events: none; /* Impede que clique na imagem afete interações */
-    user-select: none; /* Impede seleção de texto na imagem */
+    pointer-events: none; /* Impede que o mouse interaja com a imagem */
+    user-select: none; /* Impede a seleção de texto na imagem */
 }
 
 .speech-bubble {
@@ -313,13 +318,13 @@ button:hover {
     padding: 10px 15px;
     font-size: 16px;
     color: #333;
-    white-space: nowrap; /* Impede que o texto quebre por padrão */
+    white-space: nowrap; /* Impede que o texto quebre por padrão, mas responsivo muda */
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     animation: fadeInScale 0.5s ease-out; /* Animação de entrada */
     z-index: 10;
     text-align: center;
     min-width: 120px;
-    max-width: 250px;
+    max-width: 250px; /* Limita a largura máxima do balão */
 }
 
 /* Pequeno triângulo para balão de fala */
@@ -415,7 +420,7 @@ button:hover {
   .speech-bubble {
       font-size: 14px;
       padding: 8px 12px;
-      white-space: normal; /* Permite que o texto quebre */
+      white-space: normal; /* Permite que o texto quebre em telas menores */
       max-width: 200px;
   }
 }
