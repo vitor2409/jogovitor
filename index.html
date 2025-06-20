@@ -2,37 +2,53 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Jogo dos Hieróglifos</title>
+  <title>Jogo dos Hieróglifos - Edição Aprimorada</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gabriela&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="game-container" id="jogo">
+  <div class="game-container" id="menu">
+    <h1>Jogo dos Hieróglifos</h1>
+    <p>Teste seus conhecimentos sobre os antigos símbolos egípcios!</p>
+    <button onclick="iniciarJogo()">Iniciar Jogo</button>
+    <button onclick="mostrarModoLivre()">Modo Livre</button>
+  </div>
+
+  <div class="game-container hidden" id="jogo">
     <h1>Decifre o Hieróglifo</h1>
-    <div class="score">Pontuação: <span id="score">0</span></div>
-    <div id="timer">Tempo: <span id="time">10</span>s</div>
+    <div class="header-game">
+      <div class="score">Pontuação: <span id="score">0</span></div>
+      <div id="timer">Tempo: <span id="time">15</span>s</div>
+    </div>
     <div id="glyph">𓂀</div>
     <div class="options">
-      <button onclick="checkAnswer(this)">Opção 1</button>
-      <button onclick="checkAnswer(this)">Opção 2</button>
-      <button onclick="checkAnswer(this)">Opção 3</button>
+      <button onclick="checkAnswer(this)"></button>
+      <button onclick="checkAnswer(this)"></button>
+      <button onclick="checkAnswer(this)"></button>
+      <button onclick="checkAnswer(this)"></button>
     </div>
     <p id="feedback"></p>
+    <button class="back-button" onclick="voltarAoMenu()">Voltar ao Menu</button>
   </div>
 
   <div class="game-container hidden" id="fim">
     <h1>Fim de Jogo!</h1>
     <p>Sua pontuação final foi: <strong id="final-score"></strong></p>
     <button onclick="reiniciar()">Jogar novamente</button>
+    <button onclick="voltarAoMenu()">Voltar ao Menu</button>
   </div>
 
-  <div class="game-container" id="livre">
+  <div class="game-container hidden" id="livre">
     <h2>Modo Livre - Escreva em Hieróglifos</h2>
-    <textarea id="textoLivre" placeholder="Digite aqui..."></textarea>
+    <textarea id="textoLivre" placeholder="Digite aqui seu texto e veja-o em hieróglifos..."></textarea>
     <div class="glyph-output" id="saidaHieroglifo">𓀀</div>
+    <button class="back-button" onclick="voltarAoMenu()">Voltar ao Menu</button>
   </div>
 
   <audio id="acerto" src="acerto.mp3" preload="auto"></audio>
   <audio id="erro" src="erro.mp3" preload="auto"></audio>
+  <audio id="vitoria" src="vitoria.mp3" preload="auto"></audio>
+  <audio id="derrota" src="derrota.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>

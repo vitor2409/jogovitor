@@ -1,24 +1,54 @@
 const glyphs = [
-  { simbolo: "𓂀", resposta: "Olho", opcoes: ["Sol", "Olho", "Casa"] },
-  { simbolo: "𓇋", resposta: "Rei", opcoes: ["Rei", "Água", "Fogo"] },
-  { simbolo: "𓂻", resposta: "Andar", opcoes: ["Comer", "Andar", "Falar"] },
-  { simbolo: "𓆣", resposta: "Cobra", opcoes: ["Cobra", "Água", "Nilo"] },
-  { simbolo: "𓊹", resposta: "Deus", opcoes: ["Deus", "Faraó", "Templo"] }
+  { simbolo: "𓂀", resposta: "Olho de Hórus", opcoes: ["Olho de Hórus", "Sol Nascente", "Pirâmide", "Ciclo da Vida"] },
+  { simbolo: "𓇋", resposta: "Junco Florido (I)", opcoes: ["Junco Florido (I)", "Cajado", "Espada", "Faraó"] },
+  { simbolo: "𓂻", resposta: "Par de Pernas (Andar)", opcoes: ["Correr", "Par de Pernas (Andar)", "Pular", "Dançar"] },
+  { simbolo: "𓆣", resposta: "Besouro (Khepri)", opcoes: ["Cobra Real", "Gato Preto", "Besouro (Khepri)", "Águia"] },
+  { simbolo: "𓊹", resposta: "Deus", opcoes: ["Deus", "Sacerdote", "Templo", "Eternidade"] },
+  { simbolo: "𓁨", resposta: "Criança", opcoes: ["Adulto", "Criança", "Velho", "Família"] },
+  { simbolo: "𓋹", resposta: "Ankh (Vida)", opcoes: ["Ankh (Vida)", "Morte", "Renascer", "Amor"] },
+  { simbolo: "𓄿", resposta: "Falcão (Hórus)", opcoes: ["Águia", "Pássaro", "Falcão (Hórus)", "Coruja"] },
+  { simbolo: "𓏏", resposta: "Pão", opcoes: ["Água", "Vinho", "Pão", "Fruta"] },
+  { simbolo: "𓈖", resposta: "Água", opcoes: ["Fogo", "Terra", "Ar", "Água"] }
 ];
 
 let score = 0;
 let indiceAtual = 0;
-let tempo = 10;
+let tempo = 15; // Tempo aumentado para 15 segundos
 let timer;
 let glyphsEmbaralhados = [];
+
+// Funções de áudio
+const audioAcerto = document.getElementById("acerto");
+const audioErro = document.getElementById("erro");
+const audioVitoria = document.getElementById("vitoria");
+const audioDerrota = document.getElementById("derrota");
 
 function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
+function iniciarJogo() {
+  document.getElementById("menu").classList.add("hidden");
+  document.getElementById("jogo").classList.remove("hidden");
+  reiniciar();
+}
+
+function mostrarModoLivre() {
+  document.getElementById("menu").classList.add("hidden");
+  document.getElementById("livre").classList.remove("hidden");
+}
+
+function voltarAoMenu() {
+  document.getElementById("jogo").classList.add("hidden");
+  document.getElementById("fim").classList.add("hidden");
+  document.getElementById("livre").classList.add("hidden");
+  document.getElementById("menu").classList.remove("hidden");
+  clearInterval(timer); // Para o timer se estiver ativo
+}
+
 function carregarGlyph() {
   clearInterval(timer);
-  tempo = 10;
+  tempo = 15; // Reseta o tempo
   document.getElementById("time").textContent = tempo;
   timer = setInterval(contarTempo, 1000);
 
@@ -26,10 +56,11 @@ function carregarGlyph() {
   document.getElementById("glyph").textContent = atual.simbolo;
 
   const botoes = document.querySelectorAll(".options button");
-  atual.opcoes = shuffle(atual.opcoes);
+  const opcoesEmbaralhadas = shuffle([...atual.opcoes]); // Copia e embaralha as opções
   botoes.forEach((btn, i) => {
-    btn.textContent = atual.opcoes[i];
+    btn.textContent = opcoesEmbaralhadas[i];
     btn.disabled = false;
+    btn.classList.remove("correct", "incorrect"); // Limpa classes de feedback
   });
 
   document.getElementById("feedback").textContent = "";
@@ -40,7 +71,7 @@ function contarTempo() {
   document.getElementById("time").textContent = tempo;
   if (tempo <= 0) {
     clearInterval(timer);
-    mostrarFeedback(false);
+    mostrarFeedback(false, true); // Passa true para indicar que o tempo acabou
   }
 }
 
@@ -50,22 +81,39 @@ function checkAnswer(botao) {
   const resposta = botao.textContent;
   const correta = resposta === atual.resposta;
 
-  mostrarFeedback(correta);
+  mostrarFeedback(correta, false, botao);
 }
 
-function mostrarFeedback(correto) {
+function mostrarFeedback(correto, tempoEsgotado = false, botaoClicado = null) {
   const atual = glyphsEmbaralhados[indiceAtual];
   const botoes = document.querySelectorAll(".options button");
   botoes.forEach(btn => btn.disabled = true);
 
   const feedback = document.getElementById("feedback");
+
   if (correto) {
     score++;
-    document.getElementById("acerto").play();
+    audioAcerto.play();
     feedback.textContent = "✅ Correto!";
+    if (botaoClicado) {
+      botaoClicado.classList.add("correct");
+    }
   } else {
-    document.getElementById("erro").play();
-    feedback.textContent = "❌ Errado! Era: " + atual.resposta;
+    audioErro.play();
+    if (tempoEsgotado) {
+      feedback.textContent = "⏰ Tempo esgotado! Era: " + atual.resposta;
+    } else {
+      feedback.textContent = "❌ Errado! Era: " + atual.resposta;
+      if (botaoClicado) {
+        botaoClicado.classList.add("incorrect");
+      }
+    }
+    // Destacar a resposta correta se houver uma opção correspondente
+    botoes.forEach(btn => {
+      if (btn.textContent === atual.resposta) {
+        btn.classList.add("correct");
+      }
+    });
   }
 
   document.getElementById("score").textContent = score;
@@ -84,6 +132,12 @@ function fimDeJogo() {
   document.getElementById("jogo").classList.add("hidden");
   document.getElementById("fim").classList.remove("hidden");
   document.getElementById("final-score").textContent = score;
+
+  if (score >= glyphs.length / 2) { // Critério de vitória simples
+    audioVitoria.play();
+  } else {
+    audioDerrota.play();
+  }
 }
 
 function reiniciar() {
@@ -110,5 +164,6 @@ document.getElementById("textoLivre").addEventListener("input", () => {
   document.getElementById("saidaHieroglifo").textContent = convertido || "𓀀";
 });
 
-glyphsEmbaralhados = shuffle([...glyphs]);
-carregarGlyph();
+// Inicialização - O jogo agora começa com o menu
+// glyphsEmbaralhados = shuffle([...glyphs]);
+// carregarGlyph();

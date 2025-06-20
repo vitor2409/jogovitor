@@ -1,66 +1,172 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Philosopher&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gabriela&display=swap');
 
 body {
-  font-family: 'Philosopher', sans-serif;
+  font-family: 'Gabriela', sans-serif;
   background: linear-gradient(135deg, #fceabb, #f8b500);
   color: #333;
   text-align: center;
   padding: 30px;
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Prevent scrollbar from animation */
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('pyramid-background.png'); /* Add a subtle background image */
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+  z-index: -1;
 }
 
 h1, h2 {
+  font-family: 'Cinzel Decorative', serif;
   color: #5c3d00;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .game-container {
   background: #fffbe6;
-  padding: 30px 20px;
-  border-radius: 20px;
-  max-width: 600px;
+  padding: 40px 30px;
+  border-radius: 25px;
+  max-width: 650px;
+  width: 90%;
   margin: 20px auto;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 3px solid #ffda77;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-container::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 30px;
+  background: linear-gradient(45deg, #ffd700, #daa520, #ff8c00);
+  z-index: -1;
+  filter: blur(8px);
+  opacity: 0.6;
 }
 
 .game-container:hover {
-  transform: scale(1.01);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 }
 
 #glyph {
-  font-size: 100px;
-  margin: 20px 0;
-  animation: pulse 1.5s infinite;
+  font-family: 'Segoe UI Historic', 'Noto Color Emoji', sans-serif; /* Fallback for hieroglyphs */
+  font-size: 120px;
+  margin: 25px 0;
+  animation: pulse 2s infinite ease-in-out;
+  color: #8B4513; /* Darker brown for glyphs */
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.9; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 30px;
 }
 
 .options button {
-  margin: 10px;
-  padding: 12px 24px;
-  font-size: 18px;
+  padding: 15px 25px;
+  font-size: 19px;
   cursor: pointer;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(135deg, #ffda77, #ffb347);
-  transition: background 0.3s, transform 0.2s;
-}
-
-.options button:hover {
-  background: linear-gradient(135deg, #ffc300, #ff5733);
-  transform: scale(1.05);
-  color: white;
-}
-
-#feedback, .score, #timer {
-  margin-top: 15px;
+  border-radius: 15px;
+  border: 2px solid #e0ac00;
+  background: linear-gradient(135deg, #ffeb99, #ffcc66);
+  color: #6a4b00;
   font-weight: bold;
-  font-size: 18px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.options button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ffd700, #ffae42);
+  transform: translateY(-3px);
+  color: #4a3300;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.options button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.options button.correct {
+  background: linear-gradient(135deg, #a8e063, #56ab2f);
+  color: white;
+  border-color: #56ab2f;
+  animation: flashGreen 0.8s ease-out;
+}
+
+.options button.incorrect {
+  background: linear-gradient(135deg, #ff6b6b, #ee3c3c);
+  color: white;
+  border-color: #ee3c3c;
+  animation: shake 0.5s ease-out;
+}
+
+@keyframes flashGreen {
+  0% { background-color: transparent; }
+  50% { background-color: #56ab2f; }
+  100% { background-color: transparent; }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+#feedback {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 20px;
+  color: #d35400;
+  min-height: 25px; /* To prevent layout shift */
+}
+
+.score, #timer {
+  font-weight: bold;
+  font-size: 22px;
+  color: #8B4513;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 8px 15px;
+  border-radius: 10px;
+  margin: 0 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header-game {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .hidden {
@@ -68,17 +174,163 @@ h1, h2 {
 }
 
 #textoLivre {
-  width: 85%;
-  height: 100px;
-  margin-top: 15px;
-  padding: 10px;
+  width: calc(100% - 40px);
+  min-height: 120px;
+  margin-top: 25px;
+  padding: 15px;
   font-size: 18px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
+  border-radius: 15px;
+  border: 2px solid #e0ac00;
+  background-color: #fffaf0;
+  resize: vertical;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-family: 'Gabriela', sans-serif;
+}
+
+#textoLivre::placeholder {
+  color: #aaa;
 }
 
 .glyph-output {
-  font-size: 50px;
-  margin-top: 20px;
+  font-family: 'Segoe UI Historic', 'Noto Color Emoji', sans-serif;
+  font-size: 60px;
+  margin-top: 25px;
   color: #5c3d00;
+  background-color: #fffaf0;
+  padding: 15px;
+  border-radius: 15px;
+  border: 2px dashed #e0ac00;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-all;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+button {
+  margin-top: 25px;
+  padding: 15px 30px;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 15px;
+  border: none;
+  background: linear-gradient(135deg, #ffda77, #ffb347);
+  color: #5c3d00;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+  background: linear-gradient(135deg, #ffc300, #ff5733);
+  transform: translateY(-3px);
+  color: white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.back-button {
+  background: linear-gradient(135deg, #a9a9a9, #808080);
+  color: white;
+  border: none;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.back-button:hover {
+  background: linear-gradient(135deg, #808080, #696969);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .game-container {
+    padding: 25px 15px;
+    margin: 15px auto;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  #glyph {
+    font-size: 90px;
+  }
+
+  .options {
+    grid-template-columns: 1fr;
+  }
+
+  .options button {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+
+  #textoLivre {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .glyph-output {
+    font-size: 45px;
+    min-height: 60px;
+  }
+
+  button {
+    padding: 12px 25px;
+    font-size: 18px;
+  }
+
+  .score, #timer {
+    font-size: 18px;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 15px;
+  }
+
+  .game-container {
+    padding: 20px 10px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  #glyph {
+    font-size: 70px;
+    margin: 15px 0;
+  }
+
+  .options button {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  #feedback {
+    font-size: 16px;
+  }
+
+  .score, #timer {
+    font-size: 16px;
+    padding: 5px 10px;
+  }
+
+  #textoLivre {
+    font-size: 14px;
+  }
+
+  .glyph-output {
+    font-size: 40px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
 }
