@@ -9,7 +9,7 @@ const glyphs = [
     { simbolo: "𓄿", resposta: "Falcão (Hórus)", opcoes: ["Águia", "Pássaro", "Falcão (Hórus)", "Coruja"] },
     { simbolo: "𓏏", resposta: "Pão", opcoes: ["Água", "Vinho", "Pão", "Fruta"] },
     { simbolo: "𓈖", resposta: "Água", opcoes: ["Fogo", "Terra", "Ar", "Água"] },
-    { simbolo: "𓂋", resposta: "Boca (R)", opcoes: ["Orelha", "Nariz", "Boca (R)", "Olho"] }, // Corrected 'd' to '𓂋' as per common mapping
+    { simbolo: "𓂋", resposta: "Boca (R)", opcoes: ["Orelha", "Nariz", "Boca (R)", "Olho"] },
     { simbolo: "𓂓", resposta: "Cesto (K)", opcoes: ["Vaso", "Cesto (K)", "Copo", "Caixa"] },
     { simbolo: "𓐑", resposta: "Mão (D)", opcoes: ["Pé", "Mão (D)", "Braço", "Dedo"] },
     { simbolo: "𓇽", resposta: "Estrela (Seba)", opcoes: ["Sol", "Lua", "Estrela (Seba)", "Nuvem"] },
@@ -24,46 +24,53 @@ let timer;
 let glyphsEmbaralhados = [];
 
 // Funções de áudio
+// É importante que esses elementos existam e seus 'src' estejam corretos no HTML
 const audioAcerto = document.getElementById("acerto");
 const audioErro = document.getElementById("erro");
 const audioVitoria = document.getElementById("vitoria");
 const audioDerrota = document.getElementById("derrota");
 
-// Adição para música ambiente
 const backgroundMusic = document.getElementById("backgroundMusic");
 const toggleMusicButton = document.getElementById("toggleMusic");
 let isMusicPlaying = false;
 
-// Adiciona um volume inicial mais baixo para a música ambiente
+// Adiciona um volume inicial mais baixo para a música ambiente, se o elemento existir
 if (backgroundMusic) {
     backgroundMusic.volume = 0.4;
 }
 
 // Função para tocar/pausar a música
 function toggleMusic() {
-    if (isMusicPlaying) {
-        backgroundMusic.pause();
-        isMusicPlaying = false;
-        toggleMusicButton.textContent = "Música: OFF";
-    } else {
-        // Tenta tocar. Pode falhar se não houver interação do usuário ainda.
-        const playPromise = backgroundMusic.play();
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                isMusicPlaying = true;
-                toggleMusicButton.textContent = "Música: ON";
-            }).catch(error => {
-                console.log("Erro ao tocar música (provavelmente política de autoplay):", error);
-                // Informa o usuário que a música pode precisar de interação para tocar
-                if (error.name === "NotAllowedError") {
-                    alert("Seu navegador bloqueou a reprodução automática. A música pode começar após a primeira interação (ex: iniciar o jogo).");
-                }
-            });
+    // Verifica se o elemento de áudio existe e se tem uma fonte válida antes de tentar tocar
+    if (backgroundMusic && backgroundMusic.src) {
+        if (isMusicPlaying) {
+            backgroundMusic.pause();
+            isMusicPlaying = false;
+            toggleMusicButton.textContent = "Música: OFF";
+        } else {
+            const playPromise = backgroundMusic.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isMusicPlaying = true;
+                    toggleMusicButton.textContent = "Música: ON";
+                }).catch(error => {
+                    console.log("Erro ao tocar música (provavelmente política de autoplay):", error);
+                    if (error.name === "NotAllowedError") {
+                        // Alerta mais específico para política de autoplay
+                        alert("Seu navegador bloqueou a reprodução automática. A música pode começar após a primeira interação (ex: iniciar o jogo).");
+                    } else {
+                        // Outros erros de reprodução
+                        alert("Não foi possível iniciar a música. Verifique o arquivo de áudio.");
+                    }
+                });
+            }
         }
+    } else {
+        console.warn("Elemento de música de fundo não encontrado ou sem fonte válida.");
+        alert("A música de fundo não pode ser tocada. O arquivo pode estar faltando ou o caminho está incorreto.");
     }
 }
 
-// Adicionar listener ao botão de música
 document.addEventListener("DOMContentLoaded", () => {
     if (toggleMusicButton) {
         toggleMusicButton.addEventListener("click", toggleMusic);
@@ -85,24 +92,15 @@ function iniciarJogo() {
     document.getElementById("menu").classList.add("hidden");
     document.getElementById("jogo").classList.remove("hidden");
     reiniciar();
-    // Tentar tocar a música quando o jogo iniciar, se não estiver tocando
+    // Tenta tocar a música ao iniciar o jogo, se não estiver tocando
     if (!isMusicPlaying) {
-        const playPromise = backgroundMusic.play();
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                isMusicPlaying = true;
-                toggleMusicButton.textContent = "Música: ON";
-            }).catch(error => {
-                console.log("Música ambiente não pôde ser iniciada automaticamente. Erro:", error);
-            });
-        }
+        toggleMusic(); // Reutiliza a função toggleMusic para tentar tocar
     }
 }
 
 function mostrarModoLivre() {
     document.getElementById("menu").classList.add("hidden");
     document.getElementById("livre").classList.remove("hidden");
-    // A música ambiente continua tocando no modo livre
 }
 
 function voltarAoMenu() {
@@ -110,7 +108,7 @@ function voltarAoMenu() {
     document.getElementById("fim").classList.add("hidden");
     document.getElementById("livre").classList.add("hidden");
     document.getElementById("menu").classList.remove("hidden");
-    clearInterval(timer);
+    clearInterval(timer); // Para o timer se estiver ativo
 }
 
 function carregarGlyph() {
@@ -124,11 +122,11 @@ function carregarGlyph() {
 
     const botoes = document.querySelectorAll(".options button");
     const opcoesEmbaralhadas = shuffle([...atual.opcoes]);
+
     botoes.forEach((btn, i) => {
         btn.textContent = opcoesEmbaralhadas[i];
-        btn.disabled = false; // Re-enable buttons for the new question
-        btn.classList.remove("correct", "incorrect"); // Clear feedback classes
-        btn.disabled = false;
+        btn.disabled = false; // <<< ESSENCIAL: HABILITA OS BOTÕES PARA A NOVA PERGUNTA
+        btn.classList.remove("correct", "incorrect"); // Limpa classes de feedback
     });
 
     document.getElementById("feedback").textContent = "";
@@ -139,12 +137,12 @@ function contarTempo() {
     document.getElementById("time").textContent = tempo;
     if (tempo <= 0) {
         clearInterval(timer);
-        mostrarFeedback(false, true);
+        mostrarFeedback(false, true); // Tempo esgotado
     }
 }
 
 function checkAnswer(botao) {
-    clearInterval(timer);
+    clearInterval(timer); // Para o timer imediatamente ao clicar
     const atual = glyphsEmbaralhados[indiceAtual];
     const resposta = botao.textContent;
     const correta = resposta === atual.resposta;
@@ -155,19 +153,23 @@ function checkAnswer(botao) {
 function mostrarFeedback(correto, tempoEsgotado = false, botaoClicado = null) {
     const atual = glyphsEmbaralhados[indiceAtual];
     const botoes = document.querySelectorAll(".options button");
+    
+    // DESABILITA TODOS OS BOTÕES IMEDIATAMENTE PARA EVITAR MAIS CLIQUES
     botoes.forEach(btn => btn.disabled = true);
 
     const feedback = document.getElementById("feedback");
 
     if (correto) {
         score++;
-        audioAcerto.play();
+        // Tenta tocar o áudio de acerto, se ele tiver uma fonte válida
+        if (audioAcerto && audioAcerto.src) audioAcerto.play().catch(e => console.warn("Erro ao tocar áudio de acerto:", e));
         feedback.textContent = "✅ Correto!";
         if (botaoClicado) {
             botaoClicado.classList.add("correct");
         }
     } else {
-        audioErro.play();
+        // Tenta tocar o áudio de erro, se ele tiver uma fonte válida
+        if (audioErro && audioErro.src) audioErro.play().catch(e => console.warn("Erro ao tocar áudio de erro:", e));
         if (tempoEsgotado) {
             feedback.textContent = `⏰ Tempo esgotado! A resposta correta era: "${atual.resposta}"`;
         } else {
@@ -176,7 +178,7 @@ function mostrarFeedback(correto, tempoEsgotado = false, botaoClicado = null) {
                 botaoClicado.classList.add("incorrect");
             }
         }
-        // Highlight the correct answer if it's one of the options
+        // Destaca a resposta correta mesmo se o usuário errou
         botoes.forEach(btn => {
             if (btn.textContent === atual.resposta) {
                 btn.classList.add("correct");
@@ -186,14 +188,15 @@ function mostrarFeedback(correto, tempoEsgotado = false, botaoClicado = null) {
 
     document.getElementById("score").textContent = score;
 
+    // Aguarda um pouco antes de ir para a próxima pergunta ou encerrar o jogo
     setTimeout(() => {
         indiceAtual++;
         if (indiceAtual >= glyphsEmbaralhados.length) {
             fimDeJogo();
         } else {
-            carregarGlyph();
+            carregarGlyph(); // Chama para carregar a próxima pergunta e reabilitar os botões
         }
-    }, 2000);
+    }, 2000); // Atraso de 2 segundos para mostrar o feedback
 }
 
 function fimDeJogo() {
@@ -202,10 +205,11 @@ function fimDeJogo() {
     document.getElementById("fim").classList.remove("hidden");
     document.getElementById("final-score").textContent = score;
 
-    if (score >= glyphs.length / 2) {
-        audioVitoria.play();
+    // Tenta tocar o áudio de vitória/derrota, se eles tiverem uma fonte válida
+    if (score >= glyphs.length / 2) { // Critério simples de vitória: mais da metade correto
+        if (audioVitoria && audioVitoria.src) audioVitoria.play().catch(e => console.warn("Erro ao tocar áudio de vitória:", e));
     } else {
-        audioDerrota.play();
+        if (audioDerrota && audioDerrota.src) audioDerrota.play().catch(e => console.warn("Erro ao tocar áudio de derrota:", e));
     }
 }
 
@@ -234,12 +238,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 " ": " ", ".": "𓏏", ",": "𓏏", "!": "𓁢", "?": "𓐠",
                 "0": "𓐠", "1": "𓏤", "2": "𓏥", "3": "𓏦", "4": "𓏧", "5": "𓏨",
                 "6": "𓏩", "7": "𓏪", "8": "𓏫", "9": "𓏬",
-                // Added more common letters/symbols for the mapping
                 "ç": "𓋴", "á": "𓄿", "é": "𓇋", "í": "𓇋", "ó": "𓅱", "ú": "𓅱",
                 "ã": "𓄿", "õ": "𓅱",
             };
+            // Converte o texto para minúsculas e mapeia cada caractere.
+            // Se um caractere não estiver no mapa, ele será uma string vazia (omitido).
             const convertido = texto.toLowerCase().split('').map(l => mapa[l] || '').join('');
-            document.getElementById("saidaHieroglifo").textContent = convertido || "𓀀";
+            document.getElementById("saidaHieroglifo").textContent = convertido || "𓀀"; // Hieróglifo padrão se o input estiver vazio
         });
     }
 });
