@@ -126,8 +126,9 @@ function carregarGlyph() {
     const opcoesEmbaralhadas = shuffle([...atual.opcoes]);
     botoes.forEach((btn, i) => {
         btn.textContent = opcoesEmbaralhadas[i];
-        btn.disabled = true; // Re-enable buttons for the new question
+        btn.disabled = false; // Re-enable buttons for the new question
         btn.classList.remove("correct", "incorrect"); // Clear feedback classes
+        btn.disabled = false;
     });
 
     document.getElementById("feedback").textContent = "";
