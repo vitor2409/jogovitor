@@ -126,7 +126,7 @@ function carregarGlyph() {
     const opcoesEmbaralhadas = shuffle([...atual.opcoes]);
     botoes.forEach((btn, i) => {
         btn.textContent = opcoesEmbaralhadas[i];
-        btn.disabled = false; // Re-enable buttons for the new question
+        btn.disabled = true; // Re-enable buttons for the new question
         btn.classList.remove("correct", "incorrect"); // Clear feedback classes
     });
 
