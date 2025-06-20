@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gabriela&display=swap');
 
-/* Estilo padrão do body (Deserto Inicial) */
 body {
   font-family: 'Gabriela', sans-serif;
+  background: linear-gradient(135deg, #fceabb, #f8b500);
   color: #333;
   text-align: center;
   padding: 30px;
@@ -11,47 +11,27 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; /* Evita barras de rolagem estranhas */
+  overflow: hidden; /* Prevent scrollbar from animation */
   position: relative;
-  /* Transição suave para o fundo ao mudar de tema */
-  transition: background 1s ease-in-out, background-image 1s ease-in-out, color 1s ease-in-out;
 }
 
-/* Base da progressão temática: Tema Deserto */
-body.theme-desert {
-    background: linear-gradient(135deg, #fceabb, #f8b500);
-    /* Imagem de fundo padrão, ajuste o nome do arquivo se for diferente */
-    background-image: url('pyramid-background.png');
-    background-size: cover;
-    background-position: center;
-    color: #333; /* Cor do texto para este tema */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('pyramid-background.png'); /* Add a subtle background image */
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+  z-index: -1;
 }
-
-/* Tema Margens do Nilo */
-body.theme-nile {
-    background: linear-gradient(135deg, #a7d9e2, #68b0ab); /* Cores mais de rio/água */
-    /* Crie esta imagem e coloque na pasta do projeto */
-    background-image: url('nile-background.png');
-    background-size: cover;
-    background-position: center;
-    color: #2a5856; /* Cor do texto para combinar com o tema Nilo */
-}
-
-/* Tema Interior da Tumba */
-body.theme-tomb {
-    background: linear-gradient(135deg, #4b3d3d, #2c2525); /* Cores mais escuras de tumba */
-    /* Crie esta imagem e coloque na pasta do projeto */
-    background-image: url('tomb-wall.png');
-    background-size: cover;
-    background-position: center;
-    color: #eee; /* Cor do texto para claro neste tema escuro */
-}
-
 
 h1, h2 {
   font-family: 'Cinzel Decorative', serif;
-  /* Garante que a cor do cabeçalho mude com o tema do body */
-  color: inherit;
+  color: #5c3d00;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -60,15 +40,13 @@ h1, h2 {
   padding: 40px 30px;
   border-radius: 25px;
   max-width: 650px;
-  width: 90%;
+  width: 90%; /* Mantém a largura responsiva */
   margin: 20px auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 3px solid #ffda77;
   position: relative;
   overflow: hidden;
-  /* Transição para o background do container se ele mudar com o tema */
-  transition: background 1s ease-in-out, border 1s ease-in-out, box-shadow 1s ease-in-out, transform 0.3s ease;
 }
 
 .game-container::before {
@@ -91,11 +69,11 @@ h1, h2 {
 }
 
 #glyph {
-  font-family: 'Segoe UI Historic', 'Noto Color Emoji', sans-serif;
+  font-family: 'Segoe UI Historic', 'Noto Color Emoji', sans-serif; /* Fallback for hieroglyphs */
   font-size: 120px;
   margin: 25px 0;
   animation: pulse 2s infinite ease-in-out;
-  color: #8B4513;
+  color: #8B4513; /* Darker brown for glyphs */
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -170,7 +148,7 @@ h1, h2 {
   font-weight: bold;
   font-size: 20px;
   color: #d35400;
-  min-height: 25px;
+  min-height: 25px; /* To prevent layout shift */
 }
 
 .score, #timer {
@@ -286,80 +264,6 @@ button:hover {
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
 }
 
-/* --- Estilos do Personagem Guia --- */
-.guide-character-container {
-    position: relative;
-    width: 150px; /* Tamanho ajustável do contêiner da imagem */
-    height: 180px; /* Altura ajustável */
-    margin: 20px auto 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    margin-bottom: 30px; /* Espaço para o balão de fala */
-}
-
-#guideCharacter {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Garante que a imagem se ajuste sem cortar */
-    transition: opacity 0.5s ease;
-    pointer-events: none; /* Impede que o mouse interaja com a imagem */
-    user-select: none; /* Impede a seleção de texto na imagem */
-}
-
-.speech-bubble {
-    position: absolute;
-    bottom: calc(100% + 5px); /* Posiciona acima do personagem */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #fefcd7; /* Cor de papiro */
-    border: 2px solid #8B4513; /* Cor da borda */
-    border-radius: 15px;
-    padding: 10px 15px;
-    font-size: 16px;
-    color: #333;
-    white-space: nowrap; /* Impede que o texto quebre por padrão, mas responsivo muda */
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    animation: fadeInScale 0.5s ease-out; /* Animação de entrada */
-    z-index: 10;
-    text-align: center;
-    min-width: 120px;
-    max-width: 250px; /* Limita a largura máxima do balão */
-}
-
-/* Pequeno triângulo para balão de fala */
-.speech-bubble::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: -10px;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid #8B4513; /* Borda do balão */
-}
-
-.speech-bubble::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: -7px;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid #fefcd7; /* Cor de fundo do balão */
-    z-index: 11;
-}
-
-/* Animação para o balão de fala */
-@keyframes fadeInScale {
-    0% { opacity: 0; transform: translateX(-50%) scale(0.8); }
-    100% { opacity: 1; transform: translateX(-50%) scale(1); }
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -377,7 +281,7 @@ button:hover {
   }
 
   .options {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Colunas empilhadas em telas menores */
   }
 
   .options button {
@@ -386,7 +290,7 @@ button:hover {
   }
 
   #textoLivre {
-    width: calc(100% - 20px);
+    width: calc(100% - 20px); /* Ajuste para preenchimento */
     font-size: 16px;
     padding: 10px;
   }
@@ -406,22 +310,9 @@ button:hover {
     padding: 6px 12px;
   }
 
-  #toggleMusic {
+  #toggleMusic { /* Ajuste para o botão de música em telas menores */
     font-size: 14px;
     padding: 8px 15px;
-  }
-
-  /* Responsividade para o personagem e balão */
-  .guide-character-container {
-      width: 120px;
-      height: 140px;
-      margin-bottom: 25px;
-  }
-  .speech-bubble {
-      font-size: 14px;
-      padding: 8px 12px;
-      white-space: normal; /* Permite que o texto quebre em telas menores */
-      max-width: 200px;
   }
 }
 
@@ -470,21 +361,8 @@ button:hover {
     font-size: 16px;
   }
 
-  #toggleMusic {
+  #toggleMusic { /* Ajuste para o botão de música em telas muito pequenas */
     font-size: 12px;
     padding: 6px 12px;
-  }
-
-  /* Responsividade para o personagem e balão */
-  .guide-character-container {
-      width: 100px;
-      height: 110px;
-      margin-bottom: 20px;
-  }
-  .speech-bubble {
-      font-size: 12px;
-      padding: 6px 10px;
-      bottom: calc(100% + 5px);
-      max-width: 150px;
   }
 }
