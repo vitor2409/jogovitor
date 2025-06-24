@@ -9,21 +9,14 @@
 </head>
 <body>
     <main>
-        <!-- Menu Principal -->
         <div class="game-container" id="menu">
-            <div class="menu-header">
-                <h1>Jogo dos Hieróglifos</h1>
-                <p>Teste seus conhecimentos sobre os antigos símbolos egípcios!</p>
-            </div>
-
-            <div class="menu-buttons">
-                <button onclick="iniciarJogo()">Iniciar Jogo</button>
-                <button onclick="mostrarModoLivre()">Modo Livre</button>
-                <button id="toggleMusic">Música: OFF</button>
-            </div>
+            <h1>Jogo dos Hieróglifos</h1>
+            <p>Teste seus conhecimentos sobre os antigos símbolos egípcios!</p>
+            <button onclick="iniciarJogo()">Iniciar Jogo</button>
+            <button onclick="mostrarModoLivre()">Modo Livre</button>
+            <button id="toggleMusic">Música: OFF</button>
         </div>
 
-        <!-- Jogo -->
         <div class="game-container hidden" id="jogo">
             <h1>Decifre o Hieróglifo</h1>
             <div class="header-game">
@@ -41,7 +34,6 @@
             <button class="back-button" onclick="voltarAoMenu()">Voltar ao Menu</button>
         </div>
 
-        <!-- Fim de jogo -->
         <div class="game-container hidden" id="fim">
             <h1>Fim de Jogo!</h1>
             <p>Sua pontuação final foi: <strong id="final-score"></strong></p>
@@ -49,7 +41,6 @@
             <button onclick="voltarAoMenu()">Voltar ao Menu</button>
         </div>
 
-        <!-- Modo Livre -->
         <div class="game-container hidden" id="livre">
             <h2>Modo Livre - Escreva em Hieróglifos</h2>
             <textarea id="textoLivre" placeholder="Digite aqui seu texto e veja-o em hieróglifos..."></textarea>
@@ -58,13 +49,11 @@
         </div>
     </main>
 
-    <!-- Áudios -->
     <audio id="acerto" src="acerto.mp3" preload="auto"></audio>
     <audio id="erro" src="erro.mp3" preload="auto"></audio>
     <audio id="vitoria" src="vitoria.mp3" preload="auto"></audio>
     <audio id="derrota" src="derrota.mp3" preload="auto"></audio>
     <audio id="backgroundMusic" src="musica_ambiente.mp3" loop preload="auto"></audio>
-
     <script src="script.js"></script>
 </body>
 </html>
