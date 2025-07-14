@@ -30,6 +30,20 @@ body::before {
     z-index: -1;
 }
 
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #222;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
+  z-index: 100; /* para ficar sobre outros elementos */
+}
+
 h1, h2 {
     font-family: 'Cinzel Decorative', serif;
     color: #5c3d00;
