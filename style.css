@@ -29,10 +29,7 @@ body::before {
     z-index: -1;
 }
 
-/* Adicione padding-bottom para que o footer fixo não cubra o conteúdo */
-main {
-    padding-bottom: 50px;
-}
+/* Padding-bottom no main removido para liberar espaço */
 
 .footer {
   position: fixed;
@@ -50,7 +47,6 @@ main {
   text-align: right;
   user-select: none;
 }
-
 
 h1, h2 {
     font-family: 'Cinzel Decorative', serif;
